@@ -8,9 +8,6 @@ A command line tool that compares two Excel or CSV files by key column and
 shows which rows were added, removed and changed. Exit codes make it easy to
 use in scripts and CI.
 
-<!-- TODO: replace with a recorded demo GIF. -->
-![rowcompare demo](docs/demo.gif)
-
 Built by [RowCompare](https://rowcompare.app), a free tool to compare two
 Excel or CSV files in your browser. Your files never leave your computer.
 
