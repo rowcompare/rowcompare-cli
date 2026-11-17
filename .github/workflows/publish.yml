@@ -1,0 +1,75 @@
+# ---------------------------------------------------------------------------
+# DISABLED UNTIL PUBLISHING IS APPROVED.
+#
+# This workflow only runs by hand (workflow_dispatch) and the publish job is
+# skipped unless BOTH are true:
+#   1. the repository variable NPM_PUBLISH_APPROVED is set to "true"
+#      (Settings → Secrets and variables → Actions → Variables), and
+#   2. the "publish_to_npm" box is ticked when starting the run.
+# Publishing uses npm trusted publishing (OIDC), so no NPM_TOKEN secret is
+# needed once the package is linked to this repo on npmjs.com.
+# ---------------------------------------------------------------------------
+name: Publish (disabled until approved)
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_to_npm:
+        description: "Publish the current package version to npm (needs NPM_PUBLISH_APPROVED=true)"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publishing is disabled until approved
+        if: ${{ vars.NPM_PUBLISH_APPROVED != 'true' }}
+        run: |
+          echo "::error::npm publishing is disabled. Set the repository variable NPM_PUBLISH_APPROVED=true to enable it."
+          exit 1
+
+  publish:
+    needs: guard
+    if: ${{ vars.NPM_PUBLISH_APPROVED == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      - name: Install
+        run: npm ci
+
+      - name: Check
+        run: npm run check
+
+      - name: Test
+        run: npm test
+
+      - name: Check whether this version is already published
+        if: ${{ inputs.publish_to_npm }}
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+
+          if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
+            echo "$PACKAGE_NAME@$PACKAGE_VERSION is already published."
+            exit 1
+          fi
+
+      - name: Publish to npm
+        if: ${{ inputs.publish_to_npm }}
+        run: npm publish

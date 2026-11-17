@@ -1,0 +1,52 @@
+{
+  "name": "rowcompare",
+  "version": "0.1.0",
+  "description": "Compare two Excel or CSV files by key column from the command line: added, removed and changed rows, with CI-friendly exit codes.",
+  "type": "module",
+  "bin": {
+    "rowcompare": "bin/rowcompare.js"
+  },
+  "files": [
+    "bin",
+    "examples",
+    "src",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check bin/rowcompare.js && node --check src/compare.js && node --check src/output.js && node --check src/read.js",
+    "prepublishOnly": "npm run check && npm test"
+  },
+  "keywords": [
+    "compare",
+    "diff",
+    "excel",
+    "xlsx",
+    "csv",
+    "spreadsheet",
+    "csv-diff",
+    "excel-compare",
+    "cli"
+  ],
+  "author": "RowCompare",
+  "license": "MIT",
+  "homepage": "https://rowcompare.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rowcompare/rowcompare-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rowcompare/rowcompare-cli/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  }
+}
