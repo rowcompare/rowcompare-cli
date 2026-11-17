@@ -1,6 +1,6 @@
 {
   "name": "rowcompare",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Compare two Excel or CSV files by key column from the command line: added, removed and changed rows, with CI-friendly exit codes.",
   "type": "module",
   "bin": {
